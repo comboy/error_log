@@ -1,0 +1,31 @@
+
+<style type="text/css">
+   #error_logs tr.odd {
+      background-color: #fefefe;
+   }
+
+   #error_logs tr.even {
+      background-color: #f5f5f5;
+   }
+
+   table#error_logs {
+      border: 1px solid #555;
+      width: 100%;
+   }
+</style>
+
+<h1>Error logs</h1>
+
+<table id="error_logs">
+   <% for error_log in @error_logs %>
+      <tr class="<%= cycle('odd','even') %>">
+         <td><%= error_log.category %></td>
+         <td>
+            <b><%= error_log.error %></b> (<%= error_log.created_at %>))<br />
+            <pre>
+               <%= error_log.backtrace %>
+            </pre>
+         </tr>
+      </tr>
+   <% end %>
+</table>

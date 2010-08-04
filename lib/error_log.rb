@@ -61,5 +61,8 @@ module ErrorLog
 
 end  # module ErrorLog
 
-ErrorLog.require_all_libs_relative_to(__FILE__)
 
+ActiveSupport.on_load(:after_initialize) do
+      ErrorLog.require_all_libs_relative_to(__FILE__)
+      #Haml.init_rails(binding)
+end
