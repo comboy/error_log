@@ -16,15 +16,21 @@
 
 <h1>Error logs</h1>
 
+<div align="right">
+   <%= button_to "Mark all as viewed", :action => 'set_all_viewed' %>
+</div>
+
 <table id="error_logs">
-   <% for error_log in @error_logs %>
+   <% @error_logs.each_pair do |hash,logs| %>
+      <% error_log = logs.first %>
       <tr class="<%= cycle('odd','even') %>">
          <td><%= error_log.category %></td>
          <td>
             <b><%= error_log.error %></b> (<%= error_log.created_at %>))<br />
-            <pre>
-               <%= error_log.backtrace %>
-            </pre>
+            <% if logs.count > 1 %>
+               Repeated <b><%= logs.count %></b> times.<br />
+            <% end %>
+            <pre><%= error_log.backtrace %></pre>
          </tr>
       </tr>
    <% end %>

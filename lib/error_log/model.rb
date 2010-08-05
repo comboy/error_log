@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 module ErrorLog
    class Model < ActiveRecord::Base
 
@@ -7,6 +9,7 @@ module ErrorLog
                t.text :error
                t.text :backtrace
                t.string :category
+               t.string :hash
                t.integer :level_id
                t.timestamp :created_at
                t.boolean :viewed, :default => false
@@ -23,6 +26,10 @@ module ErrorLog
          if obj.backtrace.kind_of? Array
             obj.backtrace = obj.backtrace.join("\n")
          end
+
+         obj.hash = Digest::MD5.hexdigest(obj.backtrace.to_s + obj.error.to_s + obj.category.to_s)
+
+         true
       end
    end
 end

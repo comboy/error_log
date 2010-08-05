@@ -3,6 +3,7 @@ class Object
       raise "no block given!" unless block_given?
       begin
          yield
+         return false
       rescue Exception => e
          ErrorLog::Model.create(
            :error => e.to_str,
