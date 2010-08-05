@@ -1,32 +1,18 @@
 error_log
-    by FIXME (your name)
-    FIXME (url)
+    by Kacper Ciesla (omboy)   
 
 == DESCRIPTION:
 
-FIXME (describe your package)
+Easy way to track exceptions and warning in your rails app
 
-== FEATURES/PROBLEMS:
-
-* FIXME (list of features or problems)
-
-== SYNOPSIS:
-
-  FIXME (code sample of usage)
-
-== REQUIREMENTS:
-
-* FIXME (list of requirements)
-
-== INSTALL:
-
-* FIXME (sudo gem install, anything else)
+It's still just a skeleton.
+More description and documentation will come.. one day.. I guess.
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2009 FIXME (different license?)
+Copyright (c) 2010 Kacper Ciesla
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
