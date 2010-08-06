@@ -9,7 +9,7 @@ module ErrorLog
   # Returns the version string for the library.
   #
   def self.version
-    @version ||= File.read(path('version.txt')).strip
+    VERSION
   end
 
   # Returns the library path for the module. If any arguments are given,
@@ -62,7 +62,7 @@ module ErrorLog
 end  # module ErrorLog
 
 
+# Hook into rails
 ActiveSupport.on_load(:after_initialize) do
-      ErrorLog.require_all_libs_relative_to(__FILE__)
-      #Haml.init_rails(binding)
+   ErrorLog.require_all_libs_relative_to(__FILE__)
 end
