@@ -1,16 +1,29 @@
 
-#TODO :would be nice to check first if ApplicationController is defined and if not use ActionController::Base
 module ErrorLog
-   class Controller < ActionController::Base
-
-      prepend_view_path File.join(ErrorLog.path,'views')
-
-      # FIXME: this layout declaration should not be needed here for default layout
-      # however without it, it does not load default layout for some reason
-      layout 'application'
+   module Controller# < ActionController::Base
 
       def index
-         @error_logs = ErrorLog::Model.all(:order => 'created_at DESC', :conditions => {:viewed => false}).group_by(&:hash)
+
+         # Rails 2.x compatible finder
+         scope = ErrorLog::Model
+
+         unless params[:errors_category].to_s.empty?
+            @errors_category = params[:errors_category]
+            scope = scope.where(:category => @errors_category)
+         end
+         
+         @error_logs = scope.all(
+            :order => 'created_at DESC', 
+            :conditions => {
+               :viewed => false
+            }
+         ).group_by(&:error_hash)
+
+         @category_counts = ErrorLog::Model.count(
+            :conditions => {:viewed => false},
+            :group => :category 
+         )
+
          render :template => '/index'
       end
 
@@ -18,6 +31,27 @@ module ErrorLog
          ErrorLog::Model.update_all(:viewed => true)
          redirect_to :back
       end
+
    end
 end
 
+class ActionController::Base
+
+   rescue_from Exception, :with => :error_log_rescue
+
+   def self.error_logs
+      append_view_path File.join(ErrorLog.path,'views')
+      self.send(:include,ErrorLog::Controller) 
+   end
+
+   def error_log_rescue(e)
+      err = ErrorLog::Model.new(
+        :error => e.to_str,
+        :backtrace => e.backtrace,
+        :category => 'rails'
+      )
+      err.save
+      raise e 
+   end
+
+end

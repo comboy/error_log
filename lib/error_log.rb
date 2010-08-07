@@ -62,7 +62,6 @@ module ErrorLog
 end  # module ErrorLog
 
 
-# Hook into rails
-ActiveSupport.on_load(:after_initialize) do
+ActiveSupport.on_load(:before_initialize) do
    ErrorLog.require_all_libs_relative_to(__FILE__)
 end
