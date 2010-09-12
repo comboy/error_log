@@ -1,3 +1,4 @@
+require 'pp'
 
 module ErrorLog
 
@@ -57,6 +58,25 @@ module ErrorLog
         ::File.join(::File.dirname(fname), dir, '**', '*.rb'))
 
     Dir.glob(search_me).sort.each {|rb| require rb}
+  end
+
+
+  def self.log(level,error,options={})
+    # get current backtrace
+    backtrace = nil
+    begin
+      raise "wat?!"
+    rescue Exception => e
+      backtrace = e.backtrace[1..-1]
+    end
+
+    ErrorLog::Model.create(
+      :error => error,
+      :backtrace => backtrace,
+      :level => level,
+      :params => options[:params],
+      :category => options[:category] || 'error_log'
+    )
   end
 
 end  # module ErrorLog

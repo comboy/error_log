@@ -14,6 +14,6 @@ Gem::Specification.new do |s|
   s.summary     = "Easy way to handle errors and warnings in rails apps"
   s.description = "Who cares about description, nobody reads it anyway."
 
-  s.files        = Dir.glob("{lib,views}/**/*") + %w(README.txt)
+  s.files        = Dir.glob("{lib,views}/**/*") + %w(README.txt Changelog.txt)
   s.require_path = 'lib'
 end

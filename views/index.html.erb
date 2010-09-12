@@ -1,62 +1,9 @@
 
 <%# I'm sorry but view ain't beautiful quite yet. It will probably be totally rewritten %>
-
-<style type="text/css">
-   #error_logs tr.odd {
-      background-color: #fefefe;
-   }
-
-   #error_logs tr.even {
-      background-color: #f5f5f5;
-   }
-
-   table#error_logs {
-      border: 1px solid #333;
-      width: 100%;
-      border-collapse: collapse;
-   }
-
-   table#error_logs td {
-      border: 1px solid #999;
-      padding: 10px;
-      font-family: Verdana;
-   }
-
-   table#error_logs .level_error {
-      background-color: #ffa;
-   }
-
-   table#error_logs .level_fatal {
-      background-color: #f99;
-   }
-
-   table#error_logs .level_warn {
-      background-color: #9c9;
-   }
-   
-   table#error_logs .level_box {
-      border: 1px solid #333;
-      padding: 10px;
-      font-weight: bold;
-      float: right;
-      margin: 20px;
-   }
-
-   table#error_logs .backtrace {
-      overflow: auto;
-      font-family: Monospace;
-      font-size: 0.9em;
-      color: #999;
-   }
-
-   table#error_logs .time {
-      font-size: 0.7em;
-      font-style: italic;
-   }
+<%# This view will be rendered inside your layout %>
 
 
-</style>
-
+<%= render :partial => '/styles' %>
 <h1>Error logs</h1>
 
 <div align="right">
@@ -78,42 +25,10 @@
         <% end %>
      </ul>
    </td><td>
-
-<table id="error_logs">
-   <% @error_logs.each_pair do |hash,logs| %>
-      <% error_log = logs.first %>
-      <tr class="<%= cycle('odd','even') %>">
-         <td>
-            <div class="level_box level_<%= error_log.level %>">
-               <%= error_log.level %>
-            </div>
-
-            <span class="time"><%= error_log.created_at %></span>
-            <br />
-            [<%= error_log.category %>]
-            <b><%= error_log.error %></b> 
-            <br />
-
-            <% if logs.count > 1 %>
-               <div style="text-align: center">
-                  Repeated <b><span style="font-size: <%= [12 + logs.count,100].min %>px;"><%= logs.count %></span></b> times.<br />
-               </div>
-            <% end %>
-            
-            <br />
-            <% bt = error_log.backtrace.split("\n") %>
-            <div class="backtrace">
-                  <%= bt[0...3].join("\n") %>                  
-                  <% bid = "error_log_bt_#{error_log.id}" %>
-                  <%= link_to_function '...', "$('#{bid}').show();" %>
-                  <span style="display: none" id="<%= bid %>">
-                     <%= bt[4...-1].join("\n") %>                  
-                  </span>
-            </div>
-         </tr>
-      </tr>
-   <% end %>
-</table>
-
-</td></tr>
+      <table id="error_logs">
+         <% @error_logs.each_pair do |hash,logs| %>
+            <%= render :partial => '/error_log', :locals => {:logs => logs} %>
+         <% end %>
+      </table>
+   </td></tr>
 </table>

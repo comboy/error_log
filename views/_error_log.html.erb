@@ -1,0 +1,47 @@
+
+<% error_log = logs.first %>
+
+<tr class="<%= cycle('odd','even') %>">
+
+   <td>
+
+      <div class="level_box level_<%= error_log.level %>">
+         <%= error_log.level %>
+      </div>
+
+      <span class="time"><%= error_log.created_at %></span>
+   
+      <br />[<%= error_log.category %>]
+      <b><%= error_log.error %></b> 
+      <br /><br />
+
+      <% if logs.count > 1 %>
+         <div style="text-align: center">
+            Repeated <b><span style="font-size: <%= [12 + logs.count,100].min %>px;"><%= logs.count %></span></b> times.<br />
+         </div>
+      <% end %>
+     
+      <% if error_log.params && !error_log.params.empty? %>
+         <br />
+         example params:
+         <pre>
+         <%= error_log.params.pretty_inspect %> 
+         </pre>
+      <% end %>
+
+      <% bt = error_log.backtrace.split("\n") %>
+      <div class="backtrace">
+
+         <%= bt[0...3].join("\n") %>
+
+         <% if bt.size > 4 %>
+            <% bid = "error_log_bt_#{error_log.id}" %>
+            <%= link_to_function '...', "$('#{bid}').show();" %>
+            <span style="display: none" id="<%= bid %>">
+               <%= bt[4...-1].join("\n") %>                  
+            </span>
+         <% end %>
+
+      </div>
+   </tr>
+</tr>

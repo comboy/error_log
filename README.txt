@@ -8,7 +8,7 @@ Easy way to track exceptions and warnings in your rails app
 It's still just a skeleton.
 More description and documentation will come.. one day.. I guess.
 
-THIS IS DEVELOPMENT VERSION, DO NOT EVEN TOUCH PRODUCTION SERVER WITH IT.
+THIS IS AN EARLY DEVELOPMENT VERSION, DO NOT EVEN TOUCH PRODUCTION SERVER WITH IT.
 Actually, it is so unmature that even playing with it can make you sad.
 And no one likes to be sad.
 
@@ -53,6 +53,7 @@ To be continued.
 
 == TODOS
 
+* better params viewing (currently only example params)
 * setting error level threshold while browsing
 * nicer browsing (themes would be good, but I really do not like css so help needed)
 * adding errors to ignore list

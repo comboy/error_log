@@ -15,12 +15,25 @@ module ErrorLog
                t.timestamp :created_at
                t.boolean :viewed, :default => false
             end
+
+            add_index :error_hash
          end
       end 
+
+      class UpgradeMigration1 < ActiveRecord::Migration
+         def self.up
+            add_column :error_logs, :params, :text
+         end
+      end
 
       self.table_name = 'error_logs'
       unless self.table_exists? 
          Migration.up
+         reset_column_information
+      end
+
+      unless column_names.include?('params')
+         UpgradeMigration1.up
       end
 
       LEVELS = {
@@ -32,6 +45,9 @@ module ErrorLog
          :fatal => 4,
          :wtf   => 5
       }
+
+      serialize :params, Hash
+      attr_accessor :count # used in grouping 
 
       def level
          LEVELS.invert[self.level_id]

@@ -11,13 +11,17 @@ module ErrorLog
             @errors_category = params[:errors_category]
             scope = scope.where(:category => @errors_category)
          end
-         
+        
+         # FIXME: obviously group by should be done on the database side
+         # the problem is, I'm not sure how to do this in the way that would work
+         # for all adapters, blah blah CONCLUSION: avoid thousands of errors ;)
          @error_logs = scope.all(
             :order => 'created_at DESC', 
             :conditions => {
                :viewed => false
             }
          ).group_by(&:error_hash)
+
 
          @category_counts = ErrorLog::Model.count(
             :conditions => {:viewed => false},

@@ -12,6 +12,7 @@ class Object
            :error => e.to_str,
            :backtrace => e.backtrace,
            :level => (options[:level] || :error),
+           :params => options[:params],
            :category => category
          )
       end
