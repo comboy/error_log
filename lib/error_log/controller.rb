@@ -36,6 +36,14 @@ module ErrorLog
          redirect_to :back
       end
 
+      def set_viewed
+         logs = ErrorLog::Model.where(:viewed => false, :error_hash => params[:error_hash])
+         logs.update_all(:viewed => true)
+         render :update do |page|
+            page[params[:row_div_id]].hide
+         end
+      end
+
    end
 end
 

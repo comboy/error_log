@@ -60,7 +60,7 @@ To be continued.
 * alternative errors storage (for database failures, maybe just some sqlite?)
 * clickable backtraces? we could show some code
 * rails 2.x compatibility
-* marking single errors as read, browsing archive
+* browsing archive (errors marked as read)
 * bugfixes, lots of
 
 == STUFF
