@@ -3,37 +3,18 @@ require 'digest/md5'
 module ErrorLog
    class Model < ActiveRecord::Base
 
-      class Migration < ActiveRecord::Migration
-         def self.up
-            create_table :error_logs do |t|
-               t.text :error
-               t.text :backtrace
-               t.string :category
-               # note to future me: "hash" is a really bad name for the column
-               t.string :error_hash
-               t.integer :level_id
-               t.timestamp :created_at
-               t.boolean :viewed, :default => false
-            end
-
-            add_index :error_hash
-         end
-      end 
-
-      class UpgradeMigration1 < ActiveRecord::Migration
-         def self.up
-            add_column :error_logs, :params, :text
-         end
-      end
-
       self.table_name = 'error_logs'
+
+      # Migrate database if needed
       unless self.table_exists? 
          Migration.up
          reset_column_information
       end
 
+      # Upgrade if needed
       unless column_names.include?('params')
          UpgradeMigration1.up
+         reset_column_information
       end
 
       LEVELS = {

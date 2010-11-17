@@ -62,13 +62,18 @@ module ErrorLog
 
 
   def self.log(level,error,options={})
-    # get current backtrace
-    backtrace = nil
-    begin
-      raise "wat?!"
-    rescue Exception => e
-      backtrace = e.backtrace[1..-1]
+    backtrace = options[:backtrace]
+    unless backtrace
+       # get current backtrace, I'm happy to learn any more clever way
+       begin
+         raise "wat?!"
+       rescue Exception => e
+         backtrace = e.backtrace[1..-1]
+       end
     end
+
+    #TODO: silent rescues may not be optimal, for now they seem better than creating more mess
+    logger.error "\n\n\n#{Time.now}\n= #{error}\n#{backtrace.join("\n")}\n#{options[:params]}" rescue nil
 
     ErrorLog::Model.create(
       :error => error,
@@ -76,7 +81,11 @@ module ErrorLog
       :level => level,
       :params => options[:params],
       :category => options[:category] || 'error_log'
-    )
+    ) rescue nil 
+  end
+
+  def self.logger
+     @logger = Logger.new(File.join(Rails.root,'log','error.log'))
   end
 
 end  # module ErrorLog

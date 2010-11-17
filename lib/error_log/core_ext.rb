@@ -8,13 +8,10 @@ class Object
          yield
          return false
       rescue Exception => e
-         ErrorLog::Model.create(
-           :error => e.to_str,
-           :backtrace => e.backtrace,
-           :level => (options[:level] || :error),
-           :params => options[:params],
-           :category => category
-         )
+         ErrorLog.log(options[:level] || :error, e.to_str,
+            :backtrace => e.backtrace,
+            :params => options[:params],
+            :category => category)
       end
    end
 

@@ -1,0 +1,32 @@
+= render :partial => '/styles'
+%h1 Error logs #{viewing_archive? ? '[archive]' : ''}
+- if viewing_archive?
+  = link_to 'view current', :archive => '0'
+
+%div{:style => 'text-align: right'}
+  - if viewing_archive?  
+    = button_to "Delete all archived", :action => 'delete_all_archived' 
+  - else
+    = button_to "Mark all as read", :action => 'set_all_viewed' 
+%br
+
+-# Hell I love table layouts 
+
+%table{:style=>"", :cellpadding => 10}
+  %tr
+    %td{:valign=>"top"}
+      %ul
+        %li
+          = link_to_if @errors_category, 'all', :action => :index 
+          (#{@category_counts.values.sum})
+        - @category_counts.each_pair do |category,count| 
+          %li
+            #{link_to_if (@errors_category != category), category, :action => :index, :errors_category => category}&nbsp;(#{count})
+      - if viewing_archive? 
+        = link_to 'view current', :archive => '0'
+      - else
+        = link_to 'view archive', :archive => '1'
+    %td 
+      %table#error_logs
+        - @error_logs.each_pair do |hash,logs| 
+          = render :partial => '/error_log', :locals => {:logs => logs} 
