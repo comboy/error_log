@@ -13,7 +13,7 @@ module ErrorLog
         t.boolean :viewed, :default => false
       end
 
-      add_index :error_hash
+      add_index :error_hash, :category
     end
   end 
 

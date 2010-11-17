@@ -53,15 +53,15 @@ To be continued.
 
 == TODOS
 
+* git (and other VCS) awareness
 * better params viewing (currently only example params)
 * setting error level threshold while browsing
-* nicer browsing (themes would be good, but I really do not like css so help needed)
+* better look (themes would be good, but I really do not like css, so help needed)
 * adding errors to ignore list
-* alternative errors storage (for database failures, maybe just some sqlite?)
+* pagination could by nice ;) (it ain't actually so bad without it thanks to grouping)
+* alternative errors storage (for database failures, probably sqlite will do)
 * clickable backtraces? we could show some code
 * rails 2.x compatibility
-* browsing archive (errors marked as read)
-* bugfixes, lots of
 
 == STUFF
 

@@ -7,26 +7,27 @@ module ErrorLog
 
     def index
 
-      session[:archive] = params['archive'] if params['archive'] 
+      prepare_opts
 
-      # Rails 2.x compatible finder
       scope = ErrorLog::Model
 
-      unless params[:errors_category].to_s.empty?
-        @errors_category = params[:errors_category]
-        scope = scope.where(:category => @errors_category)
-      end
+      scope = scope.where(:category => @errors_category) unless @errors_category.to_s.empty? 
 
-
-      # FIXME: obviously group by should be done on the database side
-      # the problem is, I'm not sure how to do this in the way that would work
-      # for all adapters, blah blah CONCLUSION: avoid thousands of errors ;)
       @error_logs = scope.all(
-        :order => 'created_at DESC',
+        :select => 'count(*) as count_all,
+           min(created_at) as created_at_first, 
+           max(created_at) as created_at_last,
+           min(backtrace) as backtrace,
+           min(error) as error,
+           min(category) as category,
+           min(params) as params,
+           max(level_id) as level_id,
+           error_hash',
+        :order => @opts[:sort_by],
+        :group => 'error_hash',
         :conditions => {
         :viewed => viewing_archive? 
-      }
-      ).group_by(&:error_hash)
+      })
 
 
       @category_counts = ErrorLog::Model.count(
@@ -68,11 +69,36 @@ module ErrorLog
     protected
 
     def viewing_archive?
-      params['archive'] == '1' || session[:archive] == '1'
+      @opts[:archive] == '1'
     end
 
     def self.included(klass)
       klass.send(:helper_method,:viewing_archive?)
+    end
+
+    def prepare_opts
+      sorts = {
+        'last' => 'created_at_last DESC',
+        'first' => 'created_at_first DESC',
+        'count' => 'count_all DESC',
+        'level' => 'level_id DESC',
+        'level_count' => 'level DESC, count_all DESC'
+      }
+
+      @opts = {
+        :archive => '0',
+        :sort_by => sorts['last'],
+        :category => nil
+      }
+
+      session[:erlgs_archive] = params[:archive] if params[:archive] 
+      @opts[:archive] = session[:erlgs_archive]
+
+      session[:erlgs_sort_by] = params[:sort_by] if params[:sort_by]
+      @opts[:sort_by] = sorts[session[:erlgs_sort_by]]
+
+      session[:erlgs_category] = params[:category] if params[:category]
+      @opts[:category] = @errors_category = session[:erlgs_category]
     end
   end
 end

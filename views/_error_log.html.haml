@@ -1,12 +1,14 @@
-- error_log = logs.first 
-- row_div_id = "error_log_row_#{error_log.id}" 
+- row_div_id = "error_log_row_#{error_log.error_hash}" 
 
 %tr{:class => cycle('odd','even'), :id => row_div_id}
   %td 
     %div{:class => "level_box level_#{error_log.level}"}
       = error_log.level
     %span.time
-      = error_log.created_at       
+      -# when using select, activerecord returns strings only
+      = Time.parse(error_log.created_at_last).strftime('%Y-%m-%d %H:%M')
+      %span{:style => 'color: #7a7'}
+        (#{distance_of_time_in_words error_log.created_at_last,Time.now} ago) 
     %br 
     %br
     [#{error_log.category}]
@@ -15,14 +17,16 @@
     %br
 
     -# Repeated N times
-    - if logs.count > 1
-      %div{:style => "text-align: center"}
+    - if error_log.count_all.to_i > 1
+      %div{:style => "text-align: center; clear: both"}
         Repeated 
         %b
-          %span{:style => "font-size: #{[12 + logs.count,100].min}px;"}
-            = logs.count
+          %span{:style => "font-size: #{[12 + error_log.count_all.to_i,100].min}px;"}
+            = error_log.count_all
         times.
         %br
+        %span.time_first{:style => 'color: #aaa'}
+          %i in the last #{distance_of_time_in_words error_log.created_at_first,Time.now}
 
     -# error params if logged     
     - if error_log.params && !error_log.params.empty? 
