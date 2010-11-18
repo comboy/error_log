@@ -1,0 +1,15 @@
+0.0.5 
+	 * haml dependency added (sorry folks, I could not stand rhtml
+	 * viewing archive
+	 * selecting sort order 
+	 * proper group by
+
+0.0.4
+   * marking single errros as read
+
+0.0.3
+   * very unmatura error params introduced
+
+0.0.2
+   Basic skeleton
+   * errors can be browsed already, grouped by error string and category
