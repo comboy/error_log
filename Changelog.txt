@@ -1,4 +1,4 @@
-0.0.6 to be
+0.0.6 
 	 * basic VCS awareness (currently git only)
 	 * bugfix for showing errors from any category
 	 * bugfix for sorting by level then count
