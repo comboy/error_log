@@ -5,18 +5,6 @@ module ErrorLog
 
       self.table_name = 'error_logs'
 
-      # Migrate database if needed
-      unless self.table_exists? 
-         Migration.up
-         reset_column_information
-      end
-
-      # Upgrade if needed
-      unless column_names.include?('params')
-         UpgradeMigration1.up
-         reset_column_information
-      end
-
       LEVELS = {
          :debug => 0,
          :info  => 1,
@@ -28,7 +16,6 @@ module ErrorLog
       }
 
       serialize :params, Hash
-      attr_accessor :count # used in grouping 
 
       def level
          LEVELS.invert[self.level_id]
@@ -46,6 +33,8 @@ module ErrorLog
          end
 
          obj.error_hash = Digest::MD5.hexdigest(obj.backtrace.to_s + obj.error.to_s + obj.category.to_s)
+
+         obj.vcs_revision = nil if vcs_revision.empty?
 
          true
       end

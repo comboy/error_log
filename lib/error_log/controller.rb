@@ -9,9 +9,10 @@ module ErrorLog
 
       prepare_opts
 
-      scope = ErrorLog::Model
+      scope = cat_scope = rev_scope = ErrorLog::Model
 
-      scope = scope.where(:category => @errors_category) unless @errors_category.to_s.empty? 
+      scope = cat_scope = scope.where(:category => @opts[:category]) if @opts[:category] 
+      scope = rev_scope = scope.where(:vcs_revision => @opts[:revision].empty? ? nil : @opts[:revision]) if @opts[:revision] 
 
       @error_logs = scope.all(
         :select => 'count(*) as count_all,
@@ -30,9 +31,18 @@ module ErrorLog
       })
 
 
-      @category_counts = ErrorLog::Model.count(
+      @category_counts = rev_scope.count(
         :conditions => {:viewed => viewing_archive?},
         :group => :category 
+      )
+
+      @revisions = cat_scope.all(
+        :select => 'vcs_revision, 
+        min(created_at) as  created_at_first, 
+        count(*) as count_all',
+        :conditions => {:viewed => viewing_archive?},
+        :group => :vcs_revision,
+        :order => 'created_at_first'
       )
 
       render :template => '/index'
@@ -82,12 +92,13 @@ module ErrorLog
         'first' => 'created_at_first DESC',
         'count' => 'count_all DESC',
         'level' => 'level_id DESC',
-        'level_count' => 'level DESC, count_all DESC'
+        'level_count' => 'level_id DESC, count_all DESC'
       }
 
       @opts = {
         :archive => '0',
         :sort_by => sorts['last'],
+        :revision => nil,
         :category => nil
       }
 
@@ -98,7 +109,12 @@ module ErrorLog
       @opts[:sort_by] = sorts[session[:erlgs_sort_by]]
 
       session[:erlgs_category] = params[:category] if params[:category]
-      @opts[:category] = @errors_category = session[:erlgs_category]
+      session[:erlgs_category] = nil if params[:category] == '-none-'
+      @opts[:category] = session[:erlgs_category]
+
+      session[:erlgs_revision] = params[:revision] if params[:revision]
+      session[:erlgs_revision] = nil if params[:revision] == '-none-'
+      @opts[:revision] = session[:erlgs_revision]
     end
   end
 end

@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency('haml')
 
-  s.files        = Dir.glob("{lib,views}/**/*") + %w(README.txt Changelog.txt)
+  s.files        = Dir.glob("{lib,views}/**/*") + %w(README.rdoc Changelog.txt)
   s.require_path = 'lib'
 end

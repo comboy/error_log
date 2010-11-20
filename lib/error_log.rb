@@ -1,5 +1,12 @@
 require 'pp'
 
+
+# Everything you find directly in this module is skel from bones
+# Some really useful methods as for lib, but you probably are not
+# interested in any of them
+#
+# If you want to take a look at methods that you call directly on 
+# ErrorLog module, like ErrorLog.log, take a look at class_methods.rb
 module ErrorLog
 
   # :stopdoc:
@@ -60,37 +67,10 @@ module ErrorLog
     Dir.glob(search_me).sort.each {|rb| require rb}
   end
 
-
-  def self.log(level,error,options={})
-    backtrace = options[:backtrace]
-    unless backtrace
-       # get current backtrace, I'm happy to learn any more clever way
-       begin
-         raise "wat?!"
-       rescue Exception => e
-         backtrace = e.backtrace[1..-1]
-       end
-    end
-
-    #TODO: silent rescues may not be optimal, for now they seem better than creating more mess
-    logger.error "\n\n\n#{Time.now}\n= #{error}\n#{backtrace.join("\n")}\n#{options[:params]}" rescue nil
-
-    ErrorLog::Model.create(
-      :error => error,
-      :backtrace => backtrace,
-      :level => level,
-      :params => options[:params],
-      :category => options[:category] || 'error_log'
-    ) rescue nil 
-  end
-
-  def self.logger
-     @logger = Logger.new(File.join(Rails.root,'log','error.log'))
-  end
-
 end  # module ErrorLog
 
 
 ActiveSupport.on_load(:before_initialize) do
    ErrorLog.require_all_libs_relative_to(__FILE__)
+   ErrorLog.init
 end

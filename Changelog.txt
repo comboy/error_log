@@ -1,3 +1,10 @@
+0.0.6 to be
+	 * basic VCS awareness (currently git only)
+	 * bugfix for showing errors from any category
+	 * bugfix for sorting by level then count
+	 * some cleanup, and a little bit of doc
+	 * bugfix for migrations (add_index bug)
+
 0.0.5 
 	 * haml dependency added (sorry folks, I could not stand rhtml
 	 * viewing archive

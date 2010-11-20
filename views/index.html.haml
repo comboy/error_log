@@ -21,14 +21,29 @@
 %table#error_logs_wrap
   %tr
     %td{:valign=>"top"}
+
+      - all_count = @category_counts.values.sum
       %b Categories:
       %ul
         %li
-          = link_to_if @errors_category, 'all', :action => :index 
-          (#{@category_counts.values.sum})
+          = link_to_if @opts[:category], 'all', :action => :index, :category => '-none-' 
+          (#{all_count})
         - @category_counts.each_pair do |category,count| 
           %li
-            #{link_to_if (@errors_category != category), category, :action => :index, :category => category}&nbsp;(#{count})
+            #{link_to_if (@opts[:category] != category), category, :action => :index, :category => category}&nbsp;(#{count})
+
+      - if @revisions.count > 1 
+        %b Revisions:
+        %ul
+          %li
+            = link_to_if @opts[:revision], 'all', :action => :index, :revision => '-none-' 
+            (#{all_count})
+          - @revisions.each do |rev| 
+            %li{:style => 'white-space: nowrap'}
+              - name = rev.created_at_first.to_date.to_s + '&nbsp;' 
+              - name += (rev.vcs_revision.to_s.empty? ? 'unknown' : truncate(rev.vcs_revision,:length => 9))
+
+              #{link_to_if (@opts[:revision] != rev.vcs_revision.to_s), raw(name), :action => :index, :revision => rev.vcs_revision.to_s}&nbsp;(#{rev.count_all})
       %br 
       %br 
       %br 

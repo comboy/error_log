@@ -12,7 +12,7 @@ THIS IS AN EARLY DEVELOPMENT VERSION, DO NOT EVEN TOUCH PRODUCTION SERVER WITH I
 Actually, it is so unmature that even playing with it can make you sad.
 And no one likes to be sad.
 
-dev screenshot: http://tesuji.pl/error_logs.png
+dev screenshot: http://tesuji.pl/error_logs.png (v 0.0.2)
 
 == REQUIREMENTS
 
@@ -53,15 +53,15 @@ To be continued.
 
 == TODOS
 
-* git (and other VCS) awareness
+* alternative errors storage (for database failures, probably sqlite will do)
 * better params viewing (currently only example params)
 * setting error level threshold while browsing
 * better look (themes would be good, but I really do not like css, so help needed)
 * adding errors to ignore list
 * pagination could by nice ;) (it ain't actually so bad without it thanks to grouping)
-* alternative errors storage (for database failures, probably sqlite will do)
-* clickable backtraces? we could show some code
+* clickable backtraces? we could try showing some code
 * rails 2.x compatibility
+* svn & other vcs support
 
 == STUFF
 
