@@ -34,7 +34,7 @@ module ErrorLog
 
          obj.error_hash = Digest::MD5.hexdigest(obj.backtrace.to_s + obj.error.to_s + obj.category.to_s)
 
-         obj.vcs_revision = nil if vcs_revision.empty?
+         obj.vcs_revision = nil if vcs_revision.to_s.empty?
 
          true
       end

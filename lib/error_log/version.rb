@@ -1,3 +1,3 @@
 module ErrorLog
-   VERSION = "0.0.6" unless defined?(::ErrorLog::VERSION)
+   VERSION = "0.0.7" unless defined?(::ErrorLog::VERSION)
 end
